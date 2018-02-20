@@ -9,8 +9,5 @@ public interface UserDao extends JpaRepository<User, Long> {
 
 	User findByLogin(String login);
 	User findByIpCentreon(String ipCentreon);
-//	List<Player> findAll();
-//	Player findById(Long id);
-	//String findNomById(Long id);
-	
+
 }

@@ -1,14 +1,30 @@
 package com.utmz.centreon.dto;
 
-import javax.persistence.Column;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import org.jtransfo.DomainClass;
+import org.jtransfo.MappedBy;
+
+import lombok.Data;
+
+@Data
+@DomainClass("com.utmz.centreon.model.User")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class UserDto {
-	
+	@MappedBy
 	private Long id;
+	@MappedBy
 	private String login;
+	@MappedBy
 	private String password;
+	@MappedBy
 	private String ipCentreon;
+	@MappedBy
 	private String loginCentreon;
+	@MappedBy
 	private String passwordCentreon;
 	public Long getId() {
 		return id;
