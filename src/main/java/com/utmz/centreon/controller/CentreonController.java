@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.utmz.centreon.dao.UserDao;
 import com.utmz.centreon.dto.CentreonDto;
-import com.utmz.centreon.dto.UserDto;
 import com.utmz.centreon.model.User;
 import com.utmz.centreon.service.ApiService;
+import com.utmz.centreon.service.UserService;
 
 @RestController
-//@RequestMapping(value = "/api")
+@RequestMapping(value = "/api")
 public class CentreonController {
 
 	@Autowired
@@ -30,35 +29,49 @@ public class CentreonController {
 	@Autowired
 	UserDao userDao;
 	
-	@RequestMapping(value = "/centreon", method = RequestMethod.GET)
+	@Autowired
+	UserService userService;
+	
+	@RequestMapping(value = "/centreon", method = RequestMethod.POST)
 	@CrossOrigin(origins = "*")
-	public List<CentreonDto> centreon()
+	public List<CentreonDto> centreon(@RequestBody User userFromAppli)
 	{
-		List<CentreonDto> centreonList = apiService.CentreonApi();
+		List<CentreonDto> centreonList = null;
+		if(userFromAppli.getLogin()!= null) {
+		User userFromBase =  userDao.findByLogin(userFromAppli.getLogin());
+		if(userFromBase != null) {
+		centreonList = apiService.CentreonApi(userFromBase);
+		}
+		}
 		return centreonList;
 	}
 	
-	@RequestMapping(value = "/verif", method = RequestMethod.POST,headers="Accept=application/json")
+	@RequestMapping(value = "/verifUser", method = RequestMethod.POST,headers="Accept=application/json")
 	@CrossOrigin(origins = "*")
 	public boolean checkExist(@RequestBody User userFromAppli)
 	{
-//		Long i = (long) 1;
-//		UserDto unUser = new UserDto(i,"ydays", "Ydays2018", "188.166.65.62", "admin", "Ydays2018");
-//		User userFromAppli  = (User) JTransfo.convert(unUser);
 		boolean trouver=false;
-		User userFromBase=userDao.findByLogin(userFromAppli.getLogin());
-		if(userFromBase != null)
-			{
-				if(userFromBase.getPassword().equals(userFromAppli.getPassword()))
-				{
-					trouver =true;
-				}			
-			}
 		
+		if(userFromAppli.getLogin()!= null)
+		{
+		trouver = userService.checkExist(userFromAppli);
+		}
 	
 		return trouver;	
 	}
+	@RequestMapping(value = "/createUser", method = RequestMethod.POST,headers="Accept=application/json")
+	@CrossOrigin(origins = "*")
+	public boolean createUser(@RequestBody User newUser)
+	{
+		boolean trouver=false;
+		
+		if(newUser.getLogin()!= null)
+		{
+			trouver = userService.createUser(newUser);
+		}
 	
+		return trouver;	
+	}
 
 
 	

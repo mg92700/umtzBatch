@@ -51,11 +51,11 @@ public class User{
 	public void setIpCentreon(String ipCentreon) {
 		this.ipCentreon = ipCentreon;
 	}
-	public String getIdCentreon() {
+	public String getLoginCentreon() {
 		return loginCentreon;
 	}
-	public void setIdCentreon(String idCentreon) {
-		this.loginCentreon = idCentreon;
+	public void setLoginCentreon(String loginCentreon) {
+		this.loginCentreon = loginCentreon;
 	}
 	public String getPasswordCentreon() {
 		return passwordCentreon;
@@ -64,13 +64,13 @@ public class User{
 		this.passwordCentreon = passwordCentreon;
 	}
 
-	public User(Long id, String login, String password, String ipCentreon, String idCentreon, String passwordCentreon) {
+	public User(Long id, String login, String password, String ipCentreon, String loginCentreon, String passwordCentreon) {
 		super();
 		this.id = id;
 		this.login = login;
 		this.password = password;
 		this.ipCentreon = ipCentreon;
-		this.loginCentreon = idCentreon;
+		this.loginCentreon = loginCentreon;
 		this.passwordCentreon = passwordCentreon;
 	}
 	public User() {
@@ -79,7 +79,7 @@ public class User{
 	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", password=" + password + ", ipCentreon=" + ipCentreon + ", idCentreon=" + loginCentreon
+		return "User [id=" + id + ", password=" + password + ", ipCentreon=" + ipCentreon + ", loginCentreon=" + loginCentreon
 				+ ", passwordCentreon=" + passwordCentreon + "]";
 	}
 	

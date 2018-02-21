@@ -14,6 +14,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.utmz.centreon.dto.CentreonDto;
+import com.utmz.centreon.model.User;
 import com.utmz.centreon.modelApi.centreon.CentreonHost;
 import com.utmz.centreon.modelApi.centreon.CentreonService;
 import com.utmz.centreon.modelApi.centreon.CentreonToken;
@@ -22,13 +23,13 @@ import com.utmz.centreon.modelApi.centreon.CentreonToken;
 @Service
 public class ApiService {
 
-	public List<CentreonDto> CentreonApi() {
+	public List<CentreonDto> CentreonApi(User user) {
 		List<CentreonDto> centreonDto = new ArrayList<>();
 		try {
-			HttpResponse<String> response = Unirest.post("http://188.166.65.62/centreon/api/index.php?action=authenticate")
+			HttpResponse<String> response = Unirest.post("http://"+user.getIpCentreon()+"/centreon/api/index.php?action=authenticate")
 					  .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW")
 					  .header("Cache-Control", "no-cache")
-					  .body("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\nadmin\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\nYdays2018\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--")
+					  .body("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n"+user.getLoginCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n"+user.getPasswordCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--")
 					  .asString();
 			ObjectMapper m = new ObjectMapper();
 			CentreonToken token = null;
@@ -42,7 +43,7 @@ public class ApiService {
 				e.printStackTrace();
 			}
 			HttpResponse<String> response2 = Unirest
-					.get("http://188.166.65.62/centreon/api/index.php?object=centreon_realtime_hosts&action=list")
+					.get("http://"+user.getIpCentreon()+"/centreon/api/index.php?object=centreon_realtime_hosts&action=list")
 					.header("content-type", "application/json").header("centreon-auth-token", token.getAuthToken())
 					.header("cache-control", "no-cache").asString();
 			ObjectMapper m2 = new ObjectMapper();
@@ -61,7 +62,7 @@ public class ApiService {
 				e.printStackTrace();
 			}
 			HttpResponse<String> response1 = Unirest
-					.get("http://188.166.65.62/centreon/api/index.php?object=centreon_realtime_services&action=list")
+					.get("http://"+user.getIpCentreon()+"/centreon/api/index.php?object=centreon_realtime_services&action=list")
 					.header("content-type", "application/json").header("centreon-auth-token", token.getAuthToken())
 					.header("cache-control", "no-cache").asString();
 			ObjectMapper m1 = new ObjectMapper();
@@ -112,6 +113,35 @@ public class ApiService {
 		}
 		return centreonDto;
 
+	}
+	
+	public boolean checkCentreonExist(User user) {
+		boolean exist = false;
+		try {
+			HttpResponse<String> response = Unirest.post("http://"+user.getIpCentreon()+"/centreon/api/index.php?action=authenticate")
+					  .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW")
+					  .header("Cache-Control", "no-cache")
+					  .body("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n"+user.getLoginCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n"+user.getPasswordCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--")
+					  .asString();
+			ObjectMapper m = new ObjectMapper();
+			CentreonToken token = null;
+			
+			token = m.readValue(response.getBody(), CentreonToken.class);
+			if(token!=null)  {
+				exist = true;
+			}
+			
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (UnirestException e) {
+				e.printStackTrace();
+			}
+		return exist;
+		
 	}
 
 	
