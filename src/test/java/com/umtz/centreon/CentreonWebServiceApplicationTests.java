@@ -1,4 +1,4 @@
-package com.echosens.dashboard;
+package com.umtz.centreon;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DashBoardWebServiceApplicationTests {
+public class CentreonWebServiceApplicationTests {
 
 	@Test
 	public void contextLoads() {
