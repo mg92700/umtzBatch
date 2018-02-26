@@ -14,6 +14,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.utmz.centreon.dto.CentreonDto;
+import com.utmz.centreon.dto.CentreonServiceDto;
 import com.utmz.centreon.model.User;
 import com.utmz.centreon.modelApi.centreon.CentreonHost;
 import com.utmz.centreon.modelApi.centreon.CentreonService;
@@ -113,6 +114,64 @@ public class ApiService {
 		}
 		return centreonDto;
 
+	}
+	
+	public List<CentreonServiceDto> ServiceCentreon(User user, int idHost){
+		List<CentreonServiceDto> serviceList = new ArrayList<>();
+		CentreonToken token = null;
+			HttpResponse<String> response;
+			try {
+				response = Unirest.post("http://"+user.getIpCentreon()+"/centreon/api/index.php?action=authenticate")
+						  .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW")
+						  .header("Cache-Control", "no-cache")
+						  .body("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n"+user.getLoginCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n"+user.getPasswordCentreon()+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--")
+						  .asString();
+		
+			ObjectMapper m = new ObjectMapper();
+			
+			try {
+				token = m.readValue(response.getBody(), CentreonToken.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			} catch (UnirestException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		HttpResponse<String> response1;
+		try {
+			response1 = Unirest
+					.get("http://"+user.getIpCentreon()+"/centreon/api/index.php?object=centreon_realtime_services&action=list")
+					.header("content-type", "application/json").header("centreon-auth-token", token.getAuthToken())
+					.header("cache-control", "no-cache").asString();
+		
+		ObjectMapper m1 = new ObjectMapper();
+		CentreonService[] services = null;
+		try {
+			services = m1.readValue(response1.getBody(), CentreonService[].class);
+			for(int i=0; i< services.length; i++) {
+				if(services[i].getHost_id()== idHost) {
+					serviceList.add(new CentreonServiceDto(services[i].getHost_id(), services[i].getDescription(), services[i].getService_id(), services[i].getState(), services[i].getOutput(), services[i].getLast_check(), services[i].getLast_state_change()));
+				}
+			}
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		} catch (UnirestException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return serviceList;
+		
 	}
 	
 	public boolean checkCentreonExist(User user) {

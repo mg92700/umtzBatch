@@ -1,5 +1,6 @@
 package com.utmz.centreon.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jtransfo.JTransfo;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.utmz.centreon.dao.UserDao;
 import com.utmz.centreon.dto.CentreonDto;
+import com.utmz.centreon.dto.CentreonServiceDto;
+import com.utmz.centreon.dto.UserCheckServiceDto;
 import com.utmz.centreon.model.User;
 import com.utmz.centreon.service.ApiService;
 import com.utmz.centreon.service.UserService;
@@ -73,6 +76,13 @@ public class CentreonController {
 		return status;	
 	}
 
-
+	@RequestMapping(value = "/checkService", method = RequestMethod.POST,headers="Accept=application/json")
+	@CrossOrigin(origins = "*")
+	public List<CentreonServiceDto> checkService(@RequestBody UserCheckServiceDto newUser)
+	{
+		User userFromBase = userDao.findByLogin(newUser.getLogin());
+		List<CentreonServiceDto> serviceList = apiService.ServiceCentreon(userFromBase, newUser.getIdHost());
+		return serviceList;
+	}
 	
 }

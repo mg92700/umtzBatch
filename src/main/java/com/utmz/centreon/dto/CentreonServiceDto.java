@@ -1,23 +1,14 @@
-package com.utmz.centreon.modelApi.centreon;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+package com.utmz.centreon.dto;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CentreonService {
-	
-	private int service_id;
-	private int host_id;
-	private String description;
-	private int state;
-	private String output;
+public class CentreonServiceDto {
+
+    private int host_id;
+    private String description;
+    private int service_id;
+    private int state;
+    private String output;
     private Long last_check;
     private Long last_state_change;
-	
-	public int getService_id() {
-		return service_id;
-	}
-	public void setService_id(int service_id) {
-		this.service_id = service_id;
-	}
 	public int getHost_id() {
 		return host_id;
 	}
@@ -30,6 +21,13 @@ public class CentreonService {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public int getService_id() {
+		return service_id;
+	}
+	public void setService_id(int service_id) {
+		this.service_id = service_id;
+	}
+
 	public int getState() {
 		return state;
 	}
@@ -54,7 +52,17 @@ public class CentreonService {
 	public void setLast_state_change(Long last_state_change) {
 		this.last_state_change = last_state_change;
 	}
+	public CentreonServiceDto(int host_id, String description, int service_id, int state, String output,
+			Long last_check, Long last_state_change) {
+		super();
+		this.host_id = host_id;
+		this.description = description;
+		this.service_id = service_id;
+		this.state = state;
+		this.output = output;
+		this.last_check = last_check;
+		this.last_state_change = last_state_change;
+	}
 
-	
 	
 }
