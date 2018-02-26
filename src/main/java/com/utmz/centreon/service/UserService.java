@@ -32,18 +32,23 @@ public class UserService {
 	return trouver;
 	}
 	
-	public boolean createUser(User newUser) {
-	boolean trouver=false;
+	public Integer createUser(User newUser) {
+//	boolean trouver=false;
+	int status = -1;
 	if(userDao.findByLogin(newUser.getLogin())==null) {
 		if(newUser.getLoginCentreon()!=null && newUser.getIpCentreon()!=null && newUser.getPassword()!=null && newUser.getPasswordCentreon()!=null)
 		if(apiService.checkCentreonExist(newUser)) {
 			String mdpEncrypt = cryptageService.encrypt(newUser.getPasswordCentreon());
 			newUser.setPasswordCentreon(mdpEncrypt);
 			userDao.save(newUser);
-			trouver=true;
-		}	
+//			trouver=true;
+			status=0;
+		}
+		else {
+			status = -2;
+		}
 	}
-	return trouver;
+	return status;
 	}
 }
 

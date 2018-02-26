@@ -61,16 +61,16 @@ public class CentreonController {
 	}
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST,headers="Accept=application/json")
 	@CrossOrigin(origins = "*")
-	public boolean createUser(@RequestBody User newUser)
+	public Integer createUser(@RequestBody User newUser)
 	{
-		boolean trouver=false;
-		
+		//boolean trouver=false;
+		int status = -1;
 		if(newUser.getLogin()!= null)
 		{
-			trouver = userService.createUser(newUser);
+			status = userService.createUser(newUser);
 		}
 	
-		return trouver;	
+		return status;	
 	}
 
 
