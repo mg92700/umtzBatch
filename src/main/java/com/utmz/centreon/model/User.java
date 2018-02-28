@@ -26,6 +26,8 @@ public class User{
 	private String loginCentreon;
 	@Column(nullable = false)
 	private String passwordCentreon;
+	@Column(nullable = false)
+	private String tokenPhoneId;
 	
 	public Long getId() {
 		return id;
@@ -63,8 +65,18 @@ public class User{
 	public void setPasswordCentreon(String passwordCentreon) {
 		this.passwordCentreon = passwordCentreon;
 	}
-
-	public User(Long id, String login, String password, String ipCentreon, String loginCentreon, String passwordCentreon) {
+	public String getTokenPhoneId() {
+		return tokenPhoneId;
+	}
+	public void setTokenPhoneId(String tokenPhoneId) {
+		this.tokenPhoneId = tokenPhoneId;
+	}
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public User(Long id, String login, String password, String ipCentreon, String loginCentreon,
+			String passwordCentreon, String tokenPhoneId) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -72,16 +84,16 @@ public class User{
 		this.ipCentreon = ipCentreon;
 		this.loginCentreon = loginCentreon;
 		this.passwordCentreon = passwordCentreon;
-	}
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
+		this.tokenPhoneId = tokenPhoneId;
 	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", password=" + password + ", ipCentreon=" + ipCentreon + ", loginCentreon=" + loginCentreon
-				+ ", passwordCentreon=" + passwordCentreon + "]";
+		return "User [id=" + id + ", login=" + login + ", password=" + password + ", ipCentreon=" + ipCentreon
+				+ ", loginCentreon=" + loginCentreon + ", passwordCentreon=" + passwordCentreon + ", tokenPhoneId="
+				+ tokenPhoneId + "]";
 	}
+
+
 	
 	
 	

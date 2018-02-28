@@ -26,6 +26,9 @@ public class UserDto {
 	private String loginCentreon;
 	@MappedBy
 	private String passwordCentreon;
+	@MappedBy
+	private String tokenPhoneId;
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,8 +65,15 @@ public class UserDto {
 	public void setPasswordCentreon(String passwordCentreon) {
 		this.passwordCentreon = passwordCentreon;
 	}
+	public String getTokenPhoneId() {
+		return tokenPhoneId;
+	}
+	public void setTokenPhoneId(String tokenPhoneId) {
+		this.tokenPhoneId = tokenPhoneId;
+	}
+
 	public UserDto(Long id, String login, String password, String ipCentreon, String loginCentreon,
-			String passwordCentreon) {
+			String passwordCentreon, String tokenPhoneId) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -71,12 +81,15 @@ public class UserDto {
 		this.ipCentreon = ipCentreon;
 		this.loginCentreon = loginCentreon;
 		this.passwordCentreon = passwordCentreon;
+		this.tokenPhoneId = tokenPhoneId;
 	}
 	@Override
 	public String toString() {
 		return "UserDto [id=" + id + ", login=" + login + ", password=" + password + ", ipCentreon=" + ipCentreon
-				+ ", loginCentreon=" + loginCentreon + ", passwordCentreon=" + passwordCentreon + "]";
+				+ ", loginCentreon=" + loginCentreon + ", passwordCentreon=" + passwordCentreon + ", tokenPhoneId="
+				+ tokenPhoneId + "]";
 	}
+
 
 	
 }
