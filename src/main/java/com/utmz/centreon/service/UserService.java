@@ -21,11 +21,15 @@ public class UserService {
 	
 	public boolean checkExist(User userFromAppli) {
 	boolean trouver=false;
+	String tokePhoneId = userFromAppli.getTokenPhoneId();
 	User userFromBase=userDao.findByLogin(userFromAppli.getLogin());
+
 	if(userFromBase != null)
 		{
 			if(userFromBase.getPassword().equals(userFromAppli.getPassword()))
 			{
+				userFromBase.setTokenPhoneId(tokePhoneId);
+				userDao.save(userFromBase);
 				trouver =true;
 			}			
 		}
@@ -35,10 +39,11 @@ public class UserService {
 	public Integer createUser(User newUser) {
 	int status = -1;
 	if(userDao.findByLogin(newUser.getLogin())==null) {
-		if(newUser.getLoginCentreon()!=null && newUser.getIpCentreon()!=null && newUser.getPassword()!=null && newUser.getPasswordCentreon()!=null && newUser.getTokenPhoneId()!= null)
+		if(newUser.getLoginCentreon()!=null && newUser.getIpCentreon()!=null && newUser.getPassword()!=null && newUser.getPasswordCentreon()!=null)
 		if(apiService.checkCentreonExist(newUser)) {
 			String mdpEncrypt = cryptageService.encrypt(newUser.getPasswordCentreon());
 			newUser.setPasswordCentreon(mdpEncrypt);
+			newUser.setTokenPhoneId(null);
 			userDao.save(newUser);
 			status=0;
 		}
