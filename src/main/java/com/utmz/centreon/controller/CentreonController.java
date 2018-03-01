@@ -16,6 +16,7 @@ import com.utmz.centreon.dto.CentreonServiceDto;
 import com.utmz.centreon.dto.UserCheckServiceDto;
 import com.utmz.centreon.model.User;
 import com.utmz.centreon.service.ApiService;
+import com.utmz.centreon.service.CryptageService;
 import com.utmz.centreon.service.UserService;
 
 @RestController
@@ -34,6 +35,9 @@ public class CentreonController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired 
+	CryptageService cryptageService;
+	
 	@RequestMapping(value = "/centreon", method = RequestMethod.POST)
 	@CrossOrigin(origins = "*")
 	public List<CentreonDto> centreon(@RequestBody User userFromAppli)
@@ -41,9 +45,12 @@ public class CentreonController {
 		List<CentreonDto> centreonList = null;
 		if(userFromAppli.getLogin()!= null) {
 		User userFromBase =  userDao.findByLogin(userFromAppli.getLogin());
+		userFromBase.setPasswordCentreon(cryptageService.decrypt(userFromBase.getPasswordCentreon()));
 		if(userFromBase != null) {
 		centreonList = apiService.CentreonApi(userFromBase);
 		}
+		userFromBase.setPasswordCentreon(cryptageService.encrypt(userFromBase.getPasswordCentreon()));
+		userDao.save(userFromBase);
 		}
 		return centreonList;
 	}
@@ -79,7 +86,10 @@ public class CentreonController {
 	public List<CentreonServiceDto> checkService(@RequestBody UserCheckServiceDto newUser)
 	{
 		User userFromBase = userDao.findByLogin(newUser.getLogin());
+		userFromBase.setPasswordCentreon(cryptageService.decrypt(userFromBase.getPasswordCentreon()));
 		List<CentreonServiceDto> serviceList = apiService.ServiceCentreon(userFromBase, newUser.getIdHost());
+		userFromBase.setPasswordCentreon(cryptageService.encrypt(userFromBase.getPasswordCentreon()));
+		userDao.save(userFromBase);
 		return serviceList;
 	}
 	
