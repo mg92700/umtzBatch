@@ -1,6 +1,5 @@
 package com.utmz.centreon.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtransfo.JTransfo;
@@ -66,7 +65,6 @@ public class CentreonController {
 	@CrossOrigin(origins = "*")
 	public Integer createUser(@RequestBody User newUser)
 	{
-		//boolean trouver=false;
 		int status = -1;
 		if(newUser.getLogin()!= null)
 		{
@@ -84,5 +82,15 @@ public class CentreonController {
 		List<CentreonServiceDto> serviceList = apiService.ServiceCentreon(userFromBase, newUser.getIdHost());
 		return serviceList;
 	}
+	
+	@RequestMapping(value = "/deconnexion", method = RequestMethod.POST,headers="Accept=application/json")
+	@CrossOrigin(origins = "*")
+	public void test(@RequestBody User newUser)
+	{
+		User userFromBase = userDao.findByLogin(newUser.getLogin());
+		userFromBase.setTokenPhoneId(null);
+		userDao.save(userFromBase);
+	}
+	
 	
 }
