@@ -20,7 +20,7 @@ public class main {
 	    	  //t.EnvoieDonne();
 	    	  t.EnvoieDonne();
 	        // et faire une pause
-	        Thread.sleep(60000);
+	        Thread.sleep(5000);
 	        }
 	      }
 	      catch (InterruptedException ex) {}
